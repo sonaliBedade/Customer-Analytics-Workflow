@@ -43,7 +43,7 @@ By following best practices in data engineering and analytics, this project buil
    - Queried BigQuery to extract insights such as:
      - Top 10 loyal customers
      - Average number of orders per customer
-     - Churned customers (inactive >180 days)
+     - Churned customers (inactive > 80 days)
      - New vs Returning customer breakdown
      - Customer active lifespan analysis
 
