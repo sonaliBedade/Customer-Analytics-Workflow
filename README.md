@@ -68,38 +68,13 @@ Query 1 - finding top 10 loyal customers
 
 ![Loyals](https://github.com/user-attachments/assets/886921ba-a05b-4c73-84f3-8c8129196cc7)
 
-SELECT id,
-first_name,
-last_name,
-number_of_orders
-FROM `dbt-bq-458200.dbt_bq_data.customers` 
-order by number_of_orders desc
-limit 10
-
 ![image](https://github.com/user-attachments/assets/33af9051-c046-4743-8bff-7b0f719228aa)
 
 Query 2 - average number of orders per customer
 
-select 
-cast(floor(avg(number_of_orders)) as int64) as avg_orders_per_customer
-from dbt-bq-458200.dbt_bq_data.customers
-
 ![image](https://github.com/user-attachments/assets/5cdc46ba-5062-44b4-8dd3-90efa5b59a86)
 
 Query 3 - churn analysis (customers inactive for 2+ months)
-
-with latest_date as (
-  select max(most_recent_order) as latest_order_date
-  from dbt-bq-458200.dbt_bq_data.customers
-)
-
-select
-id, 
-first_name,
-last_name,
-most_recent_order
-from dbt-bq-458200.dbt_bq_data.customers, latest_date
-where date_diff(latest_date.latest_order_date, most_recent_order, DAY) > 80
 
 ![image](https://github.com/user-attachments/assets/3367a903-945b-467a-811b-29fbebe44e06)
 
@@ -107,30 +82,40 @@ Query 4 - new vs returning customer
 
 ![returning_vs_new](https://github.com/user-attachments/assets/0a05c619-7832-4248-8139-8057861da0f9)
 
-select
-case
-when number_of_orders = 1 then "new customer"
-else "returning customer"
-end as customer_type, count(*) as num_customers
-from dbt-bq-458200.dbt_bq_data.customers
-group by customer_type
-
 ![image](https://github.com/user-attachments/assets/7d756504-3b1c-46a8-ae0b-1870dfb4aeda)
 
 Query 5 - customer activity time span
 
-select
-id,
-first_name,
-last_name,
-date_diff(most_recent_order, first_order, DAY) as active_days
-from dbt-bq-458200.dbt_bq_data.customers
-order by active_days desc
-limit 10
-
 ![image](https://github.com/user-attachments/assets/8ea09d70-bfd8-4da4-a267-7770b21c5a79)
 
+## Insights:
 
+- Most customers place only a single order.
+This indicates low customer retention across the user base.
+Business Focus: Introduce loyalty programs, reactivation offers, and retention campaigns to encourage repeat orders.
+
+- A small group of loyal customers contributes to repeat business.
+Top customers placed 8 to 10 orders each. These high-value users represent an opportunity for VIP loyalty programs, exclusive offers, and personalized marketing.
+Business Focus: Nurture loyal customers and increase their lifetime value.
+
+- Customer churn is a potential risk.
+Several customers have been inactive for over 80 days.
+Early signs of churn highlight the need for customer re-engagement strategies.
+Business Focus: Send reactivation campaigns targeting churned customers to win them back.
+
+- Returning customer rate is strong, but new customer acquisition is lower.
+67% of customers are returning; only 33% are new. This suggests the business is retaining customers well, but may need to increase new customer acquisition efforts.
+Business Focus: Enhance marketing campaigns to attract new customers, while maintaining strong loyalty efforts for existing users.
+
+- Most customers have short activity spans.
+The longest customer activity period recorded is only 76 days (~2.5 months).
+This indicates that customers typically stop engaging within 2-3 months of their first order.
+Business Focus: Launch re-engagement campaigns around the 60-day mark to prevent churn.
+
+## Conclusion
+
+This project demonstrates the power of combining dbt, BigQuery, and SQL for building scalable, tested, and insightful data workflows.  
+It highlights how structured data pipelines can translate directly into business value by enabling faster, more confident decision-making.
 
 
 
